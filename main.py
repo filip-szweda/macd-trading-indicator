@@ -9,11 +9,11 @@ def ema(wig20, i, N):
     power = N
     if i - N >= 0:
         for sample in range(i - N, i):
-            nominator += wig20.at[sample, 0] * pow(1 - alfa, power)
+            nominator += wig20.at[sample, 'Najwyzszy'] * pow(1 - alfa, power)
             power -= 1
     else:
         for sample in range(0, i):
-            nominator += wig20.at[sample, 0] * pow(1 - alfa, power)
+            nominator += wig20.at[sample, 'Najwyzszy'] * pow(1 - alfa, power)
             power -= 1
     return nominator / denominator
 

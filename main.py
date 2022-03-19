@@ -6,19 +6,15 @@ def ema(data, current_day, period):
     alfa = 2 / (period + 1)
     denominator = (1 - pow(1 - alfa, period)) / alfa
 
-    if current_day - period < 0:
-        last_day = -1
-    else:
-        last_day = current_day - period - 1
-
     nominator = 0
     power = 0
+    last_day = current_day - period - 1
 
     for sample in range(current_day, last_day, -1):
         if type(data) is pandas.DataFrame:
             value = data.at[sample, 'Otwarcie'] # later change to 'Zamkniecie'
         else:
-            value = data[sample]
+            value = data[sample - 1]
         nominator += value * pow(1 - alfa, power)
         power += 1
 
@@ -28,19 +24,19 @@ def ema(data, current_day, period):
 def main():
     data = pandas.read_csv('wig20_d.csv', usecols=['Otwarcie']) # later change to 'Zamkniecie'
 
-    ema12 = []
-    ema26 = []
     macd = []
     signal = []
 
-    for i in range(1000):
-        ema12.append(ema(data, i, 12))
-        ema26.append(ema(data, i, 26))
-        macd.append(ema12[i] - ema26[i])
-        signal.append(ema(macd, i, 9))
+    for sample_number in range(26, 1000):
+        ema12 = ema(data, sample_number, 12)
+        ema26 = ema(data, sample_number, 26)
+        macd.append(ema12 - ema26)
+        if len(macd) >= 9:
+            signal.append(ema(macd, len(macd), 9))
 
-    pyplot.plot(list(range(1000)), macd)
-    pyplot.plot(list(range(1000)), signal)
+    new_macd = macd[9:]
+    pyplot.plot(list(range(len(new_macd))), new_macd)
+    pyplot.plot(list(range(len(signal))), signal)
     pyplot.xlabel('Sample number')
     pyplot.ylabel('Opening')
     pyplot.title('MACD trading indicator')

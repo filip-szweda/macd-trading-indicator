@@ -1,24 +1,24 @@
 import pandas
-import numpy
 from matplotlib import pyplot
 
 
-def ema(wig20, i, n):
-    alfa = 2 / (n + 1)
-    denominator = (1 - pow(1 - alfa, n)) / alfa
+def ema(data, current_day, period):
+    alfa = 2 / (period + 1)
+    denominator = (1 - pow(1 - alfa, period)) / alfa
+
+    if current_day - period < 0:
+        last_day = -1
+    else:
+        last_day = current_day - period - 1
+
     nominator = 0
     power = 0
 
-    if i - n < 0:
-        bottomRange = 0
-    else:
-        bottomRange = i - n
-
-    for sample in range(i + 1, bottomRange, -1):
-        if type(wig20) is pandas.DataFrame:
-            value = wig20.at[sample - 1, 'Najwyzszy']
+    for sample in range(current_day, last_day, -1):
+        if type(data) is pandas.DataFrame:
+            value = data.at[sample, 'Otwarcie'] # later change to 'Zamkniecie'
         else:
-            value = wig20[sample - 1]
+            value = data[sample]
         nominator += value * pow(1 - alfa, power)
         power += 1
 
@@ -26,7 +26,7 @@ def ema(wig20, i, n):
 
 
 def main():
-    wig20 = pandas.read_csv('wig20_d.csv', usecols=['Najwyzszy'])
+    data = pandas.read_csv('wig20_d.csv', usecols=['Otwarcie']) # later change to 'Zamkniecie'
 
     ema12 = []
     ema26 = []
@@ -34,13 +34,16 @@ def main():
     signal = []
 
     for i in range(1000):
-        ema12.append(ema(wig20, i, 12))
-        ema26.append(ema(wig20, i, 26))
+        ema12.append(ema(data, i, 12))
+        ema26.append(ema(data, i, 26))
         macd.append(ema12[i] - ema26[i])
         signal.append(ema(macd, i, 9))
 
     pyplot.plot(list(range(1000)), macd)
     pyplot.plot(list(range(1000)), signal)
+    pyplot.xlabel('Sample number')
+    pyplot.ylabel('Opening')
+    pyplot.title('MACD trading indicator')
     pyplot.show()
 
 

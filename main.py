@@ -35,11 +35,12 @@ def main():
             signal.append(ema(macd, len(macd), 9))
 
     new_macd = macd[9:]
-    pyplot.plot(list(range(len(new_macd))), new_macd)
-    pyplot.plot(list(range(len(signal))), signal)
+    pyplot.plot(list(range(len(new_macd))), new_macd, label='MACD')
+    pyplot.plot(list(range(len(signal))), signal, label='Signal')
     pyplot.xlabel('Sample number')
     pyplot.ylabel('Opening')
     pyplot.title('MACD trading indicator')
+    pyplot.legend()
     pyplot.show()
 
 

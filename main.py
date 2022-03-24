@@ -10,13 +10,17 @@ def main():
     macd = ema12 - ema26
     signal = macd.ewm(span=9).mean()
 
+    fig, (ax1, ax2) = pyplot.subplots(2)
 
-    pyplot.plot(macd, label='MACD')
-    pyplot.plot(signal, label='Signal')
-    pyplot.xlabel('Sample number')
-    pyplot.ylabel('Opening')
-    pyplot.title('MACD trading indicator')
-    pyplot.legend()
+    ax1.plot(data)
+    ax1.set_ylabel('Opening exchange')
+    ax1.set_title('Input data and MACD trading indicator')
+    ax2.plot(macd, label='MACD')
+    ax2.plot(signal, label='Signal')
+    ax2.set_xlabel('Sample number')
+    ax2.set_ylabel('Indicator')
+    ax2.legend()
+
     pyplot.show()
 
 

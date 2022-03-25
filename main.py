@@ -35,13 +35,11 @@ def main():
 
     fig, (ax1, ax2) = pyplot.subplots(2)
 
-    data = data[35:]
-    ax1.plot(data[35:])
-    ax1.set_ylabel('Opening exchange')
+    ax1.plot(data[33:])
+    ax1.set_ylabel('Opening stock quotes')
     ax1.set_title('Input data and MACD trading indicator')
 
-    macd = macd[9:]
-    ax2.plot(macd[9:], label='MACD')
+    ax2.plot(macd[8:], label='MACD')
     ax2.plot(signal, label='Signal')
     ax2.set_xlabel('Sample number')
     ax2.set_ylabel('Indicator')

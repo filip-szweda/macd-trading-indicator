@@ -10,12 +10,10 @@ def ema(data, current_sample, period):
     power = 0
 
     for sample in range(current_sample, last_sample, -1):
-        denominator += pow(1 - alpha, power)
-        nominator += data[sample] * pow(1 - alpha, power)
+        value = pow(1 - alpha, power)
+        denominator += value
+        nominator += data[sample] * value
         power += 1
-
-    if denominator == 0:
-        return
 
     return nominator / denominator
 
@@ -48,15 +46,15 @@ def main():
 
     ax1.plot(macd, label='MACD')
     ax1.plot(signal, label='Signal')
-    ax1.set_xlabel('Sample number')
     ax1.set_ylabel('Indicator')
+    ax1.set_title('MACD trading indicator and input data')
     ax1.legend()
 
     ax2.plot(data)
     ax2.scatter(*zip(*buy), c='g', label='Buy')
     ax2.scatter(*zip(*sell), c='r', label='Sell')
+    ax2.set_xlabel('Sample number')
     ax2.set_ylabel('Opening stock quotes')
-    ax2.set_title('Input data and MACD trading indicator')
     ax2.legend()
 
     pyplot.show()

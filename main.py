@@ -72,20 +72,29 @@ def calc_profit(data, buys, sells):
         exchanges.append((sell[0], sell[1], 0))
     exchanges = sorted(exchanges, key=lambda tup: tup[0])
 
-    capital = 1000
+    actions = 1000
     wallet = 0
 
     for exchange in exchanges:
+        print("Sample #" + str(exchange[0]))
+        print("\tWallet: " + "%.2f" % wallet + " Actions: " + str(actions))
         if exchange[2] == 1:
             if wallet >= exchange[1]:
                 how_many = int(wallet / exchange[1])
                 wallet -= how_many * exchange[1]
-                capital += how_many
+                actions += how_many
+                print("\tBuying " + str(how_many) + " actions")
+            else:
+                print("\tCan't buy")
         else:
-            wallet += capital * exchange[1]
-            capital = 0
+            if actions > 0:
+                wallet += actions * exchange[1]
+                print("\tSelling " + str(actions) + " actions")
+                actions = 0
+            else:
+                print("\tCan't sell")
 
-    return (capital * data[len(data) - 1] + wallet) * 100 / (capital * data[0])
+    return (actions * data[len(data) - 1] + wallet) * 100 / (actions * data[0])
 
 
 def main():
@@ -95,7 +104,7 @@ def main():
     buys, sells = calc_buys_sells(data, macd, signal)
     profit = calc_profit(data, buys, sells)
 
-    print("Profit: " + "%.2f" % profit + "%")
+    print("Total profit: " + "%.2f" % profit + "%")
 
     plot(data, macd, signal, buys, sells)
 

@@ -55,11 +55,11 @@ def calc_buys_sells(data, macd, signal):
     buys = []
     sells = []
     for i in range(len(macd)):
-        if i + 1 < len(macd):
+        if i + 2 < len(macd):
             if signal[i] > macd[i] and signal[i + 1] < macd[i + 1]:
-                buys.append((i, data[i]))
+                buys.append((i, data[i + 2]))
             elif signal[i] < macd[i] and signal[i + 1] > macd[i + 1]:
-                sells.append((i, data[i]))
+                sells.append((i, data[i + 2]))
 
     return buys, sells
 

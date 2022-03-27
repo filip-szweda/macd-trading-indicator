@@ -67,9 +67,9 @@ def calc_buys_sells(data, macd, signal):
 def calc_end_actions_wallet(buys, sells, start_actions, start_wallet):
     exchanges = []
     for buy in buys:
-        exchanges.append((buy[0], buy[1], 1))
+        exchanges.append((buy[0], buy[1], True))
     for sell in sells:
-        exchanges.append((sell[0], sell[1], 0))
+        exchanges.append((sell[0], sell[1], False))
     exchanges = sorted(exchanges, key=lambda tup: tup[0])
 
     actions = start_actions
@@ -78,7 +78,7 @@ def calc_end_actions_wallet(buys, sells, start_actions, start_wallet):
     for exchange in exchanges:
         print("Sample #" + str(exchange[0]))
         print("\tWallet: " + "%.2f" % wallet + " Actions: " + str(actions))
-        if exchange[2] == 1:
+        if exchange[2]:
             if wallet >= exchange[1]:
                 how_many = int(wallet / exchange[1])
                 wallet -= how_many * exchange[1]

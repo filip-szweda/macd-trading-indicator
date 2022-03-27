@@ -31,7 +31,7 @@ def plot(data, macd, signal, buys, sells):
     ax2.scatter(*zip(*buys), c='g', s=25, label='Buy')
     ax2.scatter(*zip(*sells), c='r', s=25, label='Sell')
     ax2.set_xlabel('Sample number')
-    ax2.set_ylabel('Opening stock quotes')
+    ax2.set_ylabel('Close stock quotes')
     ax2.legend()
 
     pyplot.show()
@@ -98,7 +98,7 @@ def calc_profit(data, buys, sells):
 
 
 def main():
-    entry = pandas.read_csv('wig20_d.csv')['Otwarcie'].values.tolist()
+    entry = pandas.read_csv('wig20_d.csv')['Zamkniecie'].values.tolist()
 
     macd, signal, data = calc_macd_signal_data(entry)
     buys, sells = calc_buys_sells(data, macd, signal)

@@ -64,7 +64,7 @@ def calc_buys_sells(data, macd, signal):
     return buys, sells
 
 
-def calc_profit(data, buys, sells):
+def calc_end_actions_wallet(buys, sells, start_actions, start_wallet):
     exchanges = []
     for buy in buys:
         exchanges.append((buy[0], buy[1], 1))
@@ -72,8 +72,8 @@ def calc_profit(data, buys, sells):
         exchanges.append((sell[0], sell[1], 0))
     exchanges = sorted(exchanges, key=lambda tup: tup[0])
 
-    actions = 1000
-    wallet = 0
+    actions = start_actions
+    wallet = start_wallet
 
     for exchange in exchanges:
         print("Sample #" + str(exchange[0]))
@@ -94,7 +94,7 @@ def calc_profit(data, buys, sells):
             else:
                 print("\tCan't sell")
 
-    return (actions * data[len(data) - 1] + wallet) * 100 / (actions * data[0])
+    return actions, wallet
 
 
 def main():
@@ -102,9 +102,23 @@ def main():
 
     macd, signal, data = calc_macd_signal_data(entry)
     buys, sells = calc_buys_sells(data, macd, signal)
-    profit = calc_profit(data, buys, sells)
 
-    print("Total profit: " + "%.2f" % profit + "%")
+    start_actions = 1000
+    start_wallet = 0
+    start_capital = start_actions * data[0] + start_wallet
+
+    end_actions, end_wallet = calc_end_actions_wallet(buys, sells, start_actions, start_wallet)
+    end_capital = end_actions * data[len(data) - 1] + end_wallet
+
+    print("Start capital: " + str(start_actions) + " * " + "%.2f" % data[
+        0] + " + " + "%.2f" % start_wallet + " = " + "%.2f" % start_capital)
+    print("End capital: " + str(end_actions) + " * " + "%.2f" % data[
+        len(data) - 1] + " + " + "%.2f" % end_wallet + " = " + "%.2f" % end_capital)
+
+    profit = end_capital - start_capital
+    profit_percent = 100 - start_capital * 100 / end_capital
+
+    print("Total profit: " + "%.2f" % profit + " or " + "%.2f" % profit_percent + "%")
 
     plot(data, macd, signal, buys, sells)
 
